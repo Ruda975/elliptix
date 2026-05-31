@@ -1,11 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
+"""
+
+Elliptix Source
+
+File Name: elliptic_functions.py
+Description: This module handles the numerical computation of all elliptic functions included in elliptix.
+Author: Rudolf Rosendorf
+Email: gdruda975@gmail.com
+Date: 31/05/2026 (DD/MM/YYYY)
+Version: 1.0.0
 
 """
 
-Ellipfun
-
-
-"""
 
 from cmath import (exp, log as zlog, sqrt, sin, cos, tan, sinh, cosh, tanh, asin as arcsin, acos as arccos, 
                    atan as arctan, asinh as arcsinh, acosh as arccosh, atanh as arctanh, inf, nan, nanj)
