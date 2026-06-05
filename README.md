@@ -22,14 +22,14 @@ As of right now, the documentation is handled through function Docstrings in the
 ## Implemented Functions
 
 **— The Jacobi Theta functions:** 
-$\theta_n(z, q)\;;\;n=1, 2, 3, 4$
+$\theta_n(z, q) ; n=1, 2, 3, 4$
 
 ```python
 jacobi_theta(n, z, q)
 ```
 
 **— The natural logarithm of the Jacobi Theta functions:** 
-$\log(\theta_n(z, q))\;;\;n=1, 2, 3, 4$
+$\log(\theta_n(z, q)) ; n=1, 2, 3, 4$
 
 ```python
 log_jacobi_theta(n, z, q)
