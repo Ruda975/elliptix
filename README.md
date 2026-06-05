@@ -36,7 +36,7 @@ log_jacobi_theta(n, z, q)
 ```
 
 **— The Weierstrass elliptic functions:** 
-$\weierp(z; g_2, g_3), \weierp'(z; g_2, g_3), \weierp^{-1}(w; g_2, g_3), \sigma(z; g_2, g_3), \zeta(z; g_2, g_3)$
+$\wp(z; g_2, g_3), \wp'(z; g_2, g_3), \wp^{-1}(w; g_2, g_3), \sigma(z; g_2, g_3), \zeta(z; g_2, g_3)$
 
 ```python
 weierstrass_p(z, g2, g3)
@@ -91,9 +91,9 @@ euler_phi(q)
 ```
 
 **— The Jacobi elliptic functions:**
-$\operatorname{sn}(u, m), \operatorname{cn}(u, m), \operatorname{dn}(u, m), \operatorname{am}(u, m), ...$ 
+$\text{sn}(u, m), \text{cn}(u, m), \text{dn}(u, m), \text{am}(u, m), ...$ 
 **and their inverses:**
-$\operatorname{sn}^{-1}(w, m), \operatorname{cn}^{-1}(w, m), ...$
+$\text{sn}^{-1}(w, m), \text{cn}^{-1}(w, m), ...$
 
 ```python
 jacobi_ellipfun("sn", u, m)
@@ -117,9 +117,9 @@ neville_theta_s(u, m)
 ```
 
 **— The Lemniscate elliptic functions:**
-$\operatorname{sinlem}(z), \operatorname{coslem}(z), \operatorname{sinhlem}(z), \operatorname{coshlem}(z)$
+$\text{sinlem}(z), \text{coslem}(z), \text{sinhlem}(z), \text{coshlem}(z)$
 **and their inverses:**
-$\operatorname{arcsinlem}(z), \operatorname{arccoslem}(z), \operatorname{arcsinhlem}(z), \operatorname{arccoshlem}(z)$
+$\text{arcsinlem}(z), \text{arccoslem}(z), \text{arcsinhlem}(z), \text{arccoshlem}(z)$
 
 ```python
 sinlem(z)
