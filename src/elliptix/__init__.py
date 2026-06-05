@@ -8,4 +8,5 @@ from .elliptic_functions import (arccoslem, arccoshlem, arcsinlem, arcsinhlem, c
                                  weierstrass_p_prime, weierstrass_sigma, weierstrass_w, weierstrass_zeta)
 
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
+__author__ = "Rudolf Rosendorf, gdruda975@gmail.com"

@@ -6,23 +6,31 @@
 Elliptix Source
 
 File Name: elliptic_functions.py
-Description: This module handles the numerical computation of all elliptic functions included in elliptix.
+Description: This module handles the numerical computation of all elliptic functions included in Elliptix.
 Author: Rudolf Rosendorf
 Email: gdruda975@gmail.com
-Date: 31/05/2026 (DD/MM/YYYY)
-Version: 1.0.0
+Published: 31/05/2026 (DD/MM/YYYY)
+Last Updated: 05/06/2026 (DD/MM/YYYY)
+Version: 1.1.0
+License: GNU General Public License v3 (GPLv3)
 
 """
 
 
-from cmath import (exp, log as zlog, sqrt, sin, cos, tan, sinh, cosh, tanh, asin as arcsin, acos as arccos, 
-                   atan as arctan, asinh as arcsinh, acosh as arccosh, atanh as arctanh, inf, nan, nanj)
-from math import floor, ceil, remainder, factorial
-from typing import TypeAlias, Literal, Sequence
+# ———————————————— IMPORTS ————————————————
 
-from numpy import asarray, exp as np_exp, arange, roots, empty, complex128, int32, abs as np_abs
-from scipy.special import elliprf, elliprg, comb, zeta
+from cmath import (acos as arccos, acosh as arccosh, asin as arcsin, asinh as arcsinh, atan as _atan, atanh as _atanh,
+                   cos as _cos, cosh as _cosh, exp as _exp, inf, infj, isinf, isnan, log as _log, nan, nanj, 
+                   sin as _sin, sinh as _sinh, sqrt, tan as _tan, tanh as _tanh)
 
+from math import ceil, factorial, floor, remainder
+from typing import Final, Literal, TypeAlias, Sequence
+
+from numpy import abs as np_abs, arange, asarray, complex128, empty, exp as np_exp, int32, roots
+from scipy.special import comb, elliprf, elliprg, zeta
+
+
+# ———————————————— TYPING ————————————————
 
 JacobiThetaVariants: TypeAlias = Literal[1, 2, 3, 4]
 WeierstrassEIndex: TypeAlias = Literal[1, 2, 3]
@@ -35,68 +43,74 @@ JacobiEllipfunVariants: TypeAlias = Literal["am",
                                             "nc", "nd", "nn", "ns", 
                                             "sc", "sd", "sn", "ss"]
 
-PI = 3.141592653589793
+# ———————————————— CONSTANTS ————————————————
+
+PI: Final[float] = 3.141592653589793
 """ π """
-PI_I = 3.141592653589793j
+PI_I: Final[complex] = 3.141592653589793j
 """ πi """
-PI_2 = 1.5707963267948966
+PI_2: Final[float] = 1.5707963267948966
 """ π/2 """
-TWO_PI = 6.283185307179586
+TWO_PI: Final[float] = 6.283185307179586
 """ 2π """
-TWO_PI_I = 6.283185307179586j
+TWO_PI_I: Final[complex] = 6.283185307179586j
 """ 2πi """
-THREE_PI_I = 9.42477796076938j
+THREE_PI_I: Final[complex] = 9.42477796076938j
 """ 3πi """
-PI_I_2 = 1.5707963267948966j
+PI_I_2: Final[complex] = 1.5707963267948966j
 """ πi/2 """
-PI_I_4 = 0.7853981633974483j
+PI_I_4: Final[complex] = 0.7853981633974483j
 """ πi/4 """
-PI_I_12 = 0.26179938779914946j
+PI_I_12: Final[complex] = 0.26179938779914946j
 """ πi/12 """
-PI_SQ_12 = 0.8224670334241132
+PI_SQ_12: Final[float] = 0.8224670334241132
 """ π²/12 """
-PI_INV = 0.3183098861837907
+PI_INV: Final[float] = 0.3183098861837907
 """ 1/π """
-I_PI_INV = 0.3183098861837907j
+I_PI_INV: Final[complex] = 0.3183098861837907j
 """ i/π """
-SIX_OVER_PI_I = 1.909859317102744j
+SIX_OVER_PI_I: Final[complex] = 1.909859317102744j
 """ 6i/π """
-TWO_ZETA_2 = 3.289868133696453
+TWO_ZETA_2: Final[float] = 3.289868133696453
 """ 2ζ(2) = π²/3 """
-TWO_ZETA_4 = 2.1646464674222763
+TWO_ZETA_4: Final[float] = 2.1646464674222763
 """ 2ζ(4) = π⁴/45 """
-TWO_ZETA_6 = 2.0346861239688985
+TWO_ZETA_6: Final[float] = 2.0346861239688985
 """ 2ζ(6) = 2π⁶/945 """
-SQRT_PI_2 = 1.2533141373155003
+SQRT_PI_2: Final[float] = 1.2533141373155003
 """ √(π/2) """
-ONE_54 = 0.018518518518518517
+ONE_54: Final[float] = 0.018518518518518517
 """ 1/54 """
-I_SQRT_3_2 = 0.8660254037844386j
+I_SQRT_3_2: Final[complex] = 0.8660254037844386j
 """ i √3/2 """
 
-LEM_W = 1.1981402347355923
+LEM_W: Final[float] = 1.1981402347355923
 """ π / (√2 K(1/2)) """
-LEM_Q = 0.04321391826377225
+LEM_Q: Final[float] = 0.04321391826377225
 """ e^-π """
-LEMH_W = 0.847213084793979
+LEMH_W: Final[float] = 0.847213084793979
 """ π / (2 K(1/2)) """
-HALF_LEM = 1.3110287771460598
+HALF_LEM: Final[float] = 1.3110287771460598
 """ ϖ/2 ; ϖ — Lemniscate Constant. """
 
-TAU_MIN = 0.4
+TAU_MIN: Final[float] = 0.4
 """ Minimum value of Im(τ), for which we evaluate the infinite series. """
-MAXITER = 100
+MAXITER: Final[int] = 100
 """ Maximum number of allowed iterations. """
-EPS = 2.220446049250313e-16
+EPS: Final[float] = 2.220446049250313e-16
 """ ε = 2^-52 """
-LOG_EPS = -36.04365338911715
+LOG_EPS: Final[float] = -36.04365338911715
 """ log(ε) = -52log(2) """
-TAUEPS = 1.0e-8
+TAUEPS: Final[float] = 1.0e-8
 """ Tolerance for τ in the inverse J invariant computation. """
-TINYJ = 5.0e-324j
+TINYJ: Final[complex] = 5.0e-324j
 """ The smallest possible imaginary quantity. """
-NANJ = nan + nanj
+INFJ: Final[complex] = inf + infj
+""" Complex Inf """
+NANJ: Final[complex] = nan + nanj
 """ Complex NaN """
+
+# ———————————————— ERRORS ————————————————
 
 def wrong_ellipfun_variant(pq: str) -> str:
     return f"""Invalid variant ({pq}). The variant must be: 
@@ -104,65 +118,92 @@ def wrong_ellipfun_variant(pq: str) -> str:
 2) "am" for the Jacobi amplitude."""
 
 
-def log(z: complex) -> complex:
-    if z == 0.0:
-        return -inf + 0.0j
-    return zlog(z + 0.0j)
+# ———————————————— MATH FUNCTIONS ————————————————
 
+def isnaninf(z: complex) -> bool:
+    return isnan(z) or isinf(z)
+
+def exp(z: complex) -> complex:
+    try: return _exp(z)
+    except OverflowError: return INFJ
+
+def sin(z: complex) -> complex:
+    try: return _sin(z)
+    except OverflowError: return INFJ
+
+def cos(z: complex) -> complex:
+    try: return _cos(z)
+    except OverflowError: return INFJ
+
+def tan(z: complex) -> complex:
+    try: return _tan(z)
+    except OverflowError: return INFJ
+
+def sinh(z: complex) -> complex:
+    try: return _sinh(z)
+    except OverflowError: return INFJ
+
+def cosh(z: complex) -> complex:
+    try: return _cosh(z)
+    except OverflowError: return INFJ
+
+def tanh(z: complex) -> complex:
+    try: return _tanh(z)
+    except OverflowError: return INFJ
+
+def log(z: complex) -> complex:
+    if z == 0.0: return -inf + 0.0j
+    return _log(z)
+
+def arctan(z: complex) -> complex:
+    if z == 1.0j or z == -1.0j: return NANJ
+    return _atan(z)
+
+def arctanh(z: complex) -> complex:
+    if z == 1.0 or z == -1.0: return NANJ
+    return _atanh(z)    
 
 def csc(z: complex) -> complex:
     s = sin(z)
     return NANJ if s == 0.0 else 1.0 / s
 
-
 def sec(z: complex) -> complex:
     c = cos(z)
     return NANJ if c == 0.0 else 1.0 / c
-
 
 def cot(z: complex) -> complex:
     t = tan(z)
     return NANJ if t == 0.0 else 1.0 / t
 
-
 def csch(z: complex) -> complex:
     s = sinh(z)
     return NANJ if s == 0.0 else 1.0 / s
-
 
 def sech(z: complex) -> complex:
     c = cosh(z)
     return NANJ if c == 0.0 else 1.0 / c
 
-
 def coth(z: complex) -> complex:
     t = tanh(z)
     return NANJ if t == 0.0 else 1.0 / t
 
-
 def arccsc(z: complex) -> complex:
     return NANJ if z == 0.0 else arcsin(1.0 / z)
-
 
 def arcsec(z: complex) -> complex:
     return NANJ if z == 0.0 else arccos(1.0 / z)
 
-
 def arccot(z: complex) -> complex:
     return PI_2 if z == 0.0 else arctan(1.0 / z)
-
 
 def arccsch(z: complex) -> complex:
     return NANJ if z == 0.0 else arcsinh(1.0 / z)
 
-
 def arcsech(z: complex) -> complex:
     return +inf if z == 0.0 else arccosh(1.0 / z)
 
-
 def arccoth(z: complex) -> complex:
     return PI_I_2 if z == 0.0 else arctanh(1.0 / z)
-
 
 def zatan2(y: complex, x: complex) -> complex:
 
@@ -171,7 +212,6 @@ def zatan2(y: complex, x: complex) -> complex:
         return inf
 
     return -1.0j * log((x + 1.0j * y) / s)
-
 
 def carlson_rf(x: complex, y: complex, z: complex) -> complex:
     """
@@ -187,7 +227,6 @@ def carlson_rf(x: complex, y: complex, z: complex) -> complex:
 
     return elliprf(x, y, z).item()
 
-
 def carlson_rg(x: complex, y: complex, z: complex) -> complex:
     """
     We add the smallest possible imaginary quantity (5.0e-324j), because scipy.special.elliprg doesn't 
@@ -202,7 +241,6 @@ def carlson_rg(x: complex, y: complex, z: complex) -> complex:
 
     return elliprg(x, y, z).item()
 
-
 def elliptick(m: complex) -> complex:
     """
     The Complete Elliptic Integral of the First Kind for complex arguments.
@@ -213,7 +251,6 @@ def elliptick(m: complex) -> complex:
     """
     return carlson_rf(0.0, 1.0 - m, 1.0)
 
-
 def elliptice(m: complex) -> complex:
     """
     The Complete Elliptic Integral of the Second Kind for complex arguments.
@@ -223,7 +260,6 @@ def elliptice(m: complex) -> complex:
     https://dlmf.nist.gov/19.25#i
     """
     return 2.0 * carlson_rg(0.0, 1.0 - m, 1.0)
-
 
 def ellipticf(phi: complex, m: complex) -> complex:
     """
@@ -241,6 +277,7 @@ def ellipticf(phi: complex, m: complex) -> complex:
     s, c = sin(phi), cos(phi)
     return nkm + s * carlson_rf(1.0, c * c, 1.0 - m * s * s)
 
+# ———————————————— IMPLEMENTATION ————————————————
 
 def normalize_imag(z: complex) -> complex:
     """ Normalizes the Im(z) to (-π, π), to correspond to the principal branch of log(z). """
@@ -423,7 +460,7 @@ def log_jacobi_theta(n: JacobiThetaVariants, z: complex, q: complex) -> complex:
             error_message: str = f"Invalid variant ({n}). Jacobi Theta functions are only defined for n = 1, 2, 3, 4. "
             raise ValueError(error_message)
         
-    if abs(q) >= 1.0:
+    if abs(q) >= 1.0 or isnaninf(z) or isnan(q):
         # θ(n, z, q) is only defined for |q| < 1
         return NANJ
 
@@ -780,8 +817,7 @@ def weierstrass_p_prime(z: complex, g2: complex, g3: complex) -> complex:
 
     See Also
     --------
-    weierstrass_p, inverse_weierstrass_p, weierstrass_sigma, weierstrass_zeta, weierstrass_e, weierstrass_g,
-    weierstrass_w, weierstrass_eta
+    weierstrass_p, inverse_weierstrass_p, weierstrass_sigma, weierstrass_zeta
             
     Implementation
     --------------
@@ -890,8 +926,7 @@ def inverse_weierstrass_p(w: complex, g2: complex, g3: complex) -> complex:
 
     See Also
     --------
-    weierstrass_p, weierstrass_p_prime, weierstrass_sigma, weierstrass_zeta, weierstrass_e, weierstrass_g,
-    weierstrass_w, weierstrass_eta
+    weierstrass_p, weierstrass_p_prime, weierstrass_sigma, weierstrass_zeta
             
     Implementation
     --------------
@@ -1002,8 +1037,7 @@ def weierstrass_sigma(z: complex, g2: complex, g3: complex) -> complex:
 
     See Also
     --------
-    weierstrass_p, weierstrass_p_prime, inverse_weierstrass_p, weierstrass_zeta, weierstrass_e, weierstrass_g,
-    weierstrass_w, weierstrass_eta
+    weierstrass_p, weierstrass_p_prime, inverse_weierstrass_p, weierstrass_zeta
             
     Implementation
     --------------
@@ -1124,8 +1158,7 @@ def weierstrass_zeta(z: complex, g2: complex, g3: complex) -> complex:
 
     See Also
     --------
-    weierstrass_p, weierstrass_p_prime, inverse_weierstrass_p, weierstrass_sigma, weierstrass_e, weierstrass_g,
-    weierstrass_w, weierstrass_eta
+    weierstrass_p, weierstrass_p_prime, inverse_weierstrass_p, weierstrass_sigma
             
     Implementation
     --------------
@@ -1254,7 +1287,7 @@ def neville_theta_c(u: complex, m: complex) -> complex:
 
     See Also
     --------
-    neville_theta_d, neville_theta_n, neville_theta_s, jacobi_ellipfun, inverse_jacobi_ellipfun
+    neville_theta_d, neville_theta_n, neville_theta_s
 
     Implementation
     --------------
@@ -1308,7 +1341,7 @@ def neville_theta_d(u: complex, m: complex) -> complex:
 
     See Also
     --------
-    neville_theta_c, neville_theta_n, neville_theta_s, jacobi_ellipfun, inverse_jacobi_ellipfun
+    neville_theta_c, neville_theta_n, neville_theta_s
 
     Implementation
     --------------
@@ -1362,7 +1395,7 @@ def neville_theta_n(u: complex, m: complex) -> complex:
 
     See Also
     --------
-    neville_theta_c, neville_theta_d, neville_theta_s, jacobi_ellipfun, inverse_jacobi_ellipfun
+    neville_theta_c, neville_theta_d, neville_theta_s
 
     Implementation
     --------------
@@ -1416,7 +1449,7 @@ def neville_theta_s(u: complex, m: complex) -> complex:
 
     See Also
     --------
-    neville_theta_c, neville_theta_d, neville_theta_n, jacobi_ellipfun, inverse_jacobi_ellipfun
+    neville_theta_c, neville_theta_d, neville_theta_n
 
     Implementation
     --------------
@@ -1468,7 +1501,7 @@ def dedekind_eta(tau: complex) -> complex:
 
     See Also
     --------
-    modular_lambda, klein_j, inverse_klein_j, euler_phi, eisenstein_e, eisenstein_g
+    dedekind_eta_prime, modular_lambda, klein_j, inverse_klein_j, euler_phi, eisenstein_e, eisenstein_g
 
     Implementation
     --------------
@@ -1528,7 +1561,7 @@ def modular_lambda(tau: complex) -> complex:
 
     See Also
     --------
-    dedekind_eta, klein_j, inverse_klein_j, euler_phi, eisenstein_e, eisenstein_g
+    dedekind_eta, dedekind_eta_prime, klein_j, inverse_klein_j, euler_phi, eisenstein_e, eisenstein_g
 
     Implementation
     --------------
@@ -1595,7 +1628,7 @@ def klein_j(tau: complex) -> complex:
 
     See Also
     --------
-    dedekind_eta, modular_lambda, inverse_klein_j, euler_phi, eisenstein_e, eisenstein_g
+    dedekind_eta, dedekind_eta_prime, modular_lambda, inverse_klein_j, euler_phi, eisenstein_e, eisenstein_g
 
     Implementation
     --------------
@@ -1681,7 +1714,7 @@ def inverse_klein_j(w: complex) -> complex:
 
     See Also
     --------
-    dedekind_eta, modular_lambda, klein_j, euler_phi, eisenstein_e, eisenstein_g
+    dedekind_eta, dedekind_eta_prime, modular_lambda, klein_j, euler_phi, eisenstein_e, eisenstein_g
 
     Implementation
     --------------
@@ -1782,7 +1815,7 @@ def euler_phi(q: complex) -> complex:
 
     See Also
     --------
-    dedekind_eta, modular_lambda, klein_j, inverse_klein_j, eisenstein_e, eisenstein_g
+    dedekind_eta, dedekind_eta_prime, modular_lambda, klein_j, inverse_klein_j, eisenstein_e, eisenstein_g
 
     Implementation
     --------------
@@ -1832,6 +1865,9 @@ def euler_phi(q: complex) -> complex:
 
 def eisenstein_e2_tau(tau: complex) -> complex:
 
+    if tau.imag <= 0.0 or isnaninf(tau):
+        return NANJ
+    
     tau -= round(tau.real)
 
     if tau.imag < TAU_MIN:
@@ -1950,7 +1986,7 @@ def eisenstein_g(n: int, q: complex) -> complex:
 
     See Also
     --------
-    dedekind_eta, modular_lambda, klein_j, inverse_klein_j, euler_phi, eisenstein_e
+    dedekind_eta, dedekind_eta_prime, modular_lambda, klein_j, inverse_klein_j, euler_phi, eisenstein_e
 
     Implementation
     --------------
@@ -2041,7 +2077,7 @@ def eisenstein_e(n: int, q: complex) -> complex:
 
     See Also
     --------
-    dedekind_eta, modular_lambda, klein_j, inverse_klein_j, euler_phi, eisenstein_g
+    dedekind_eta, dedekind_eta_prime, modular_lambda, klein_j, inverse_klein_j, euler_phi, eisenstein_g
 
     Implementation
     --------------
@@ -2143,7 +2179,7 @@ def jacobi_ellipfun(pq: JacobiEllipfunVariants, u: complex, m: complex) -> compl
 
     See Also
     --------
-    inverse_jacobi_ellipfun, neville_theta_c, neville_theta_d, neville_theta_n, neville_theta_s
+    inverse_jacobi_ellipfun
 
     Implementation
     --------------
@@ -2400,7 +2436,7 @@ def inverse_jacobi_ellipfun(pq: JacobiEllipfunVariants, w: complex, m: complex) 
 
     See Also
     --------
-    jacobi_ellipfun, neville_theta_c, neville_theta_d, neville_theta_n, neville_theta_s
+    jacobi_ellipfun
 
     Implementation
     --------------
