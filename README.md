@@ -130,6 +130,68 @@ arcsinhlem(z)
 ...
 ```
 
+
+## Complex Plots
+
+Plotting the elliptic functions on the complex plane using domain coloring reveals beautiful repeating patterns.
+All functions were plotted using ```elliptix.plot.ComplexPlot``` at ```1500x1500``` pixel resolution.
+
+<p align="center">
+  <img src="assets/weierstrass_p.svg" alt="The Weierstrass ℘ function." width="800">
+  <br>
+  <i>The Weierstrass ℘ function.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/weierstrass_sigma.svg" alt="The Weierstrass σ function." width="800">
+  <br>
+  <i>The Weierstrass σ function.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/jacobi_sc.svg" alt="The Jacobi sc function." width="800">
+  <br>
+  <i>The Jacobi sc function.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/eisenstein_g6.svg" alt="The Eisenstein G₆ series as a function of q." width="800">
+  <br>
+  <i>The Eisenstein G₆ series as a function of q.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/eisenstein_e12.svg" alt="The Eisenstein E₁₂ series as a function of τ." width="800">
+  <br>
+  <i>The Eisenstein E₁₂ series as a function of τ.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/klein_j.svg" alt="The Absolute Klein J invariant as a function of τ." width="800">
+  <br>
+  <i>The Absolute Klein J invariant as a function of τ.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/dedekind_eta.svg" alt="The Dedekind η function as a function of τ." width="800">
+  <br>
+  <i>The Dedekind η function as a function of τ.</i>
+  <br><br><br>
+</p>
+
+<p align="center">
+  <img src="assets/modular_lambda.svg" alt="The Modular λ function as a function of the nome, q." width="800">
+  <br>
+  <i>The Modular λ function as a function of the nome, q.</i>
+</p>
+
+
 ## Citation
 ```bibtex
 @misc{elliptix,

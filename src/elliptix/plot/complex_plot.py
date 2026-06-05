@@ -250,10 +250,10 @@ class ComplexPlot:
         return hsl_to_rgb(rbar)
 
     def _plot_image(self, axes: Axes, title: str = "Complex Plot", xlabel: str = "Re(z)", 
-                   ylabel: str = "Im(z)", alpha: float = 0.9) -> None:
+                   ylabel: str = "Im(z)", aspect_ratio: float | str = "auto", alpha: float = 0.9) -> None:
 
         axes.imshow(self._get_plot_image(), extent=(self._x_min, self._x_max, self._y_min, self._y_max), origin="lower",
-                    aspect="auto", alpha=alpha)
+                    aspect=aspect_ratio, alpha=alpha)
         
         axes.set_title(title)
         axes.set_xlabel(xlabel)
@@ -288,8 +288,8 @@ class ComplexPlot:
                 
     def plot(self, axes: Axes, func: ComplexFunction, z_min: complex, z_max: complex, 
             no_bounds: bool = False, title: str = "Complex Plot", xlabel: str = "Re(z)", 
-            ylabel: str = "Im(z)", alpha: float = 0.9, contour_linewidths: float = 0.7,
-            contour_alpha: float = 1.0) -> None:
+            ylabel: str = "Im(z)", aspect_ratio: float | str = "auto", alpha: float = 0.9, 
+            contour_linewidths: float = 0.7, contour_alpha: float = 1.0) -> None:
         
         """
         Creates a plot of the complex function.
@@ -313,6 +313,8 @@ class ComplexPlot:
             The label of the real axis, defaults to "Re(z)".
         ylabel : string.
             The label of the imaginary axis, defaults to "Im(z)". 
+        aspect_ratio: float or string.
+            The aspect ratio of the plot, height / width, defaults to "auto".
         alpha : float, (0, 1).
             The transparency of the plot, 0 is transparent, 1 is opaque. Defaults to 0.9.
         contour_linewidths : float.
@@ -328,7 +330,7 @@ class ComplexPlot:
         self._x_max, self._y_max = z_max.real, z_max.imag
 
         self._get_function_values(func, no_bounds=no_bounds)
-        self._plot_image(axes, title=title, xlabel=xlabel, ylabel=ylabel, alpha=alpha)
+        self._plot_image(axes, title=title, xlabel=xlabel, ylabel=ylabel, aspect_ratio=aspect_ratio, alpha=alpha)
 
         self._contours(axes, linewidths=contour_linewidths, alpha=contour_alpha)
         
@@ -337,10 +339,10 @@ class ComplexPlot:
 
         axes.xaxis.set_major_locator(MaxNLocator(5))
         axes.yaxis.set_major_locator(MaxNLocator(5))
-        axes.xaxis.set_minor_locator(AutoMinorLocator(5))
+        axes.xaxis.set_minor_locator(AutoMinorLocator(5 ))
         axes.yaxis.set_minor_locator(AutoMinorLocator(5))
 
-    def argbar(self, axes: Axes, aspect_ratio: float = 10.0, label: str = "arg(w)", alpha: float = 0.9) -> None:
+    def argbar(self, axes: Axes, aspect_ratio: float | str = 10.0, label: str = "arg(w)", alpha: float = 0.9) -> None:
 
         """
         Creates a bar, that relates the complex angle to the color of the plot.
@@ -349,7 +351,7 @@ class ComplexPlot:
         ----------
         axes : matplotlib Axes.
             The axes, on which the bar should be placed on.
-        aspect_ratio : float.
+        aspect_ratio : float or string.
             The aspect ratio of the bar, height / width, defaults to 10.0.
         label : string.
             The label of the bar, defaults to "arg(w)". 
@@ -368,7 +370,7 @@ class ComplexPlot:
                       r"$\pi/4$", r"$\pi/2$", r"3$\pi/4$", r"$\pi$"]
         axes.set_yticklabels(ticklabels)
     
-    def rbar(self, axes: Axes, aspect_ratio: float = 10.0, label: str = "|w|", alpha: float = 0.9) -> None:
+    def rbar(self, axes: Axes, aspect_ratio: float | str = 10.0, label: str = "|w|", alpha: float = 0.9) -> None:
 
         """
         Creates a bar, that relates the magnitude of the function to the lightness of the plot.
@@ -377,7 +379,7 @@ class ComplexPlot:
         ----------
         axes : matplotlib Axes.
             The axes, on which the bar should be placed on.
-        aspect_ratio : float.
+        aspect_ratio : float or string.
             The aspect ratio of the bar, height / width, defaults to 10.0.
         label : string.
             The label of the bar, defaults to "|w|". 
